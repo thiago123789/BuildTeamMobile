@@ -7,8 +7,10 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="build_gsd_team"
+        android:label="Build Team GSD"
         android:icon="@mipmap/ic_launcher">
+        
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -44,4 +46,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

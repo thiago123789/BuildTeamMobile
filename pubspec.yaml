@@ -23,6 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  adobe_xd: ^1.0.0
+  cloud_firestore: ^0.14.1
+  firebase_core: 0.5.0+1
+  transparent_image: ^1.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -33,6 +37,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  adobe_xd: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

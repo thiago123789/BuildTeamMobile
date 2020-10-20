@@ -1,9 +1,14 @@
+import 'package:build_gsd_team/services/team_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    TeamService service = TeamService();
+    CollectionReference teams = FirebaseFirestore.instance.collection('teams');
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -15,46 +20,66 @@ class HomeScreen extends StatelessWidget {
               flexibleSpace:
                   FlexibleSpaceBar(background: GsdHomeFlexibleSpaceBar())),
           SliverList(
-              delegate: SliverChildListDelegate(<Widget>[
-            mockedCard(),
-            mockedCard(),
-            mockedCard(),
-            mockedCard()
-          ]))
+              delegate: SliverChildListDelegate([
+            FutureBuilder<QuerySnapshot>(
+              future: teams.get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  final snackBar =
+                      SnackBar(content: Text("Error to get clients"));
+                  Scaffold.of(context).showSnackBar(snackBar);
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasData) {
+                  var map = snapshot.data.docs.map((e) => {TeamCard()});
+                }
+
+                return Text("");
+              },
+            )
+          ])),
         ],
       ),
     );
   }
 }
 
-Widget mockedCard() {
-  return Center(
-    child: Card(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const ListTile(
-            leading: Icon(Icons.album),
-            title: Text('Team name'),
-            subtitle: Text(
-                'Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sapien augue, faucibus nec ligula vitae, fringilla tincidunt tellus. Sed ullamcorper urna nisl, vel rhoncus metus bibendum id. Vestibulum consectetur turpis.'),
-          ),
-          ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                child: const Text('Allocate'),
-                onPressed: () {/* ... */},
-              ),
-              FlatButton(
-                child: const Text('Edit'),
-                onPressed: () {/* ... */},
-              ),
-            ],
-          ),
-        ],
+class TeamCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const ListTile(
+              leading: Icon(Icons.album),
+              title: Text('Team name'),
+              subtitle: Text(
+                  'Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sapien augue, faucibus nec ligula vitae, fringilla tincidunt tellus. Sed ullamcorper urna nisl, vel rhoncus metus bibendum id. Vestibulum consectetur turpis.'),
+            ),
+            ButtonBar(
+              children: <Widget>[
+                FlatButton(
+                  child: const Text('Allocate'),
+                  onPressed: () {/* ... */},
+                ),
+                FlatButton(
+                  child: const Text('Edit'),
+                  onPressed: () {/* ... */},
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class GsdHomeFlexibleSpaceBar extends StatelessWidget {
